@@ -1,5 +1,9 @@
 # Whatsapp Bot with VENOM-BOT
 
+## ℹ️ Sobre este repositório
+
+Fork do bot WhatsApp (venom-bot). Não alterar main — é fork.
+
 ## Descrição do Projeto
 
 <p align="center"></p>
