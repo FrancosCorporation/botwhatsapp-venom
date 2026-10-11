@@ -6,22 +6,37 @@ import { STAGES } from './index.js'
 export const stageTwo = {
   async exec(params) {
     const message = params.message.trim()
-    const isMsgValid = /[1|2|3|4|5|#|*]/.test(message)
+    const isMsgValid = /^(?:[1-5]|#|\*)$/.test(message)
 
     let msg =
       '❌ *Digite uma opção válida, por favor.* \n⚠️ ```APENAS UMA OPÇÃO POR VEZ``` ⚠️'
 
     if (isMsgValid) {
       if (['#', '*'].includes(message)) {
-        const option = options[message]()
-        msg = option.message
-        storage[params.from].stage = option.nextStage
+        if (message === '#' && storage[params.from].itens.length === 0) {
+          msg = '🧁 Escolha pelo menos um sabor antes de finalizar o pedido.'
+        } else {
+          const option = options[message]()
+          msg = option.message
+          storage[params.from].stage = option.nextStage
+
+          if (message === '*') {
+            storage[params.from].itens = []
+            storage[params.from].address = ''
+          }
+        }
       } else {
-        msg =
-          `✅ *${menu[message].description}* adicionado com sucesso! \n\n` +
-          '```Digite outra opção```: \n\n' +
-          '\n-----------------------------------\n#️⃣ - ```FINALIZAR pedido``` \n*️⃣ - ```CANCELAR pedido```'
-        storage[params.from].itens.push(menu[message])
+        const selectedItem = menu[message]
+
+        if (!selectedItem) {
+          msg = '❌ *Digite uma opção válida, por favor.*'
+        } else {
+          msg =
+            `✅ *${selectedItem.description}* adicionado com sucesso! \n\n` +
+            '```Digite outra opção```: \n\n' +
+            '\n-----------------------------------\n#️⃣ - ```FINALIZAR pedido``` \n*️⃣ - ```CANCELAR pedido```'
+          storage[params.from].itens.push(selectedItem)
+        }
       }
 
       if (storage[params.from].stage === STAGES.INICIAL) {

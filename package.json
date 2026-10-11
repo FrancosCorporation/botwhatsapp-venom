@@ -4,15 +4,48 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --env-file-if-exists=.env node_modules/nodemon/bin/nodemon.js src/server.js",
+    "lint": "eslint src",
+    "check": "eslint src && find src -name '*.js' -exec node --check {} \\;"
   },
   "devDependencies": {
-    "@rocketseat/eslint-config": "^1.2.0",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.12.0",
     "nodemon": "^2.0.22"
   },
   "dependencies": {
     "venom-bot": "4.3.7"
+  },
+  "resolutions": {
+    "form-data": "4.0.6",
+    "axios": "1.20.0",
+    "lodash": "4.18.1",
+    "ws": "8.22.0",
+    "tar-fs": "2.1.5",
+    "js-yaml": "4.3.2",
+    "picomatch": "2.3.2",
+    "micromatch": "4.0.8",
+    "word-wrap": "1.2.5",
+    "diff": "4.0.4",
+    "venom-bot/sharp": "0.35.5",
+    "nodemon/semver": "5.7.2",
+    "nodemon/simple-update-notifier/semver": "7.5.2",
+    "venom-bot/**/semver": "7.5.2",
+    "nodemon/minimatch": "3.1.4",
+    "venom-bot/commitizen/glob/minimatch": "3.1.4",
+    "venom-bot/cz-conventional-changelog/commitizen/glob/minimatch": "3.1.4",
+    "venom-bot/puppeteer-extra-plugin-stealth/**/minimatch": "3.1.4",
+    "nodemon/**/brace-expansion": "1.1.21",
+    "venom-bot/commitizen/**/brace-expansion": "1.1.21",
+    "venom-bot/cz-conventional-changelog/**/brace-expansion": "1.1.21",
+    "venom-bot/puppeteer-extra-plugin-stealth/**/brace-expansion": "1.1.21",
+    "venom-bot/commitizen/inquirer/external-editor/tmp": "0.2.7",
+    "venom-bot/cz-conventional-changelog/commitizen/inquirer/external-editor/tmp": "0.2.7"
   }
 }

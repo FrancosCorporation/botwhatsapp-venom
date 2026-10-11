@@ -1,72 +1,61 @@
-# Whatsapp Bot with VENOM-BOT
+# Bot de pedidos — Delícias da Neide
 
-## ℹ️ Sobre este repositório
+Bot de pedidos pelo WhatsApp, com escolha de sabores, endereço e uma etapa de atendimento. Este repositório é um fork mantido pela FrancosCorporation.
 
-Fork do bot WhatsApp (venom-bot). Não alterar main — é fork.
+## Requisitos
 
-## Descrição do Projeto
+- Node.js 22.13 ou superior.
+- Corepack e Yarn Classic (a versão usada pelo `yarn.lock` é 1.22).
+- Acesso à internet na primeira inicialização para o Venom baixar o Chromium que ele usa.
+- Linux precisa das bibliotecas de sistema exigidas pelo Chromium. O bot roda em modo headless.
 
-<p align="center"></p>
-<h1 align="center">
-    <a href="https://nodejs.org/en/">🔗 NodeJS</a>
-    <a href="https://www.npmjs.com/package/venom-bot">🧠 Venom Bot</a>
-</h1>
-<p align="center">🚀 Projeto criado com o intuito de auxiliar nas demandas de pedidos da empresa "Delícias da Neide" via WhatsApp.</p>
-<br>
-<h1 align="center">
-  Welcome
-  <img alt="Welcome" title="Welcome" src="./assets/welcome.png" />
-  Menu
-  <img alt="Menu" title="Menu" src="./assets/menu.png" />
-  Order
-  <img alt="Order" title="Order" src="./assets/order.png" />
-  Address
-  <img alt="Address" title="Address" src="./assets/address.png" />
-  Bill
-  <img alt="Bill" title="Bill" src="./assets/bill.png" />
-  Assistant
-  <img alt="Assistant" title="Assistant" src="./assets/assistant.png" />
-</h1>
-
-### Pré-requisitos
-
-Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
-[Git](https://git-scm.com), [Node.js](https://nodejs.org/en/).
-Além disto, é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/).
-
-### 🎲 Rodando nossa aplicação
+## Instalação e primeira conexão
 
 ```bash
-# Clone este repositório
-$ git clone git@github.com:juniorwmr/botwhatsapp-venom.git
-
-# Acesse a pasta do projeto no terminal/cmd
-$ cd botwhatsapp-venom
-
-# Instale as dependências
-$ npm install
-
-# Execute a aplicação em modo de desenvolvimento
-$ yarn dev
-
-## Pronto, escaneie o código QR do Whatsapp e Voilà, aproveite!
+git clone https://github.com/FrancosCorporation/botwhatsapp-venom.git
+cd botwhatsapp-venom
+PUPPETEER_SKIP_DOWNLOAD=true corepack yarn install --frozen-lockfile --ignore-scripts
+cp .env.example .env
+corepack yarn dev
 ```
 
-### 🛠 Tecnologias
+Na primeira execução, aguarde o Chromium iniciar e escaneie o QR code exibido no terminal com o WhatsApp do número usado pelo bot. A sessão fica em `tokens/` e será reutilizada nas próximas execuções. Mantenha essa pasta privada e fora de backups compartilhados: ela contém credenciais de sessão.
 
-As seguintes ferramentas foram usadas na construção do projeto:
+Para iniciar sem o modo de desenvolvimento, use `corepack yarn start`.
 
-- [Node.js](https://nodejs.org/en/)
+## Configuração
 
-### Autor
+| Variável | Padrão | Uso |
+|---|---|---|
+| `BOT_SESSION` | `Delicias-da-Neide` | Identificador local da sessão; use letras, números, ponto, hífen ou sublinhado. |
+| `BOT_DISPLAY_NAME` | `Delícias da Neide` | Nome exibido nas mensagens do bot. |
+| `BOT_DATA_FILE` | `data/storage.json` | Caminho do arquivo local que guarda carrinhos e atendimentos em andamento. |
 
----
+O arquivo `.env` é carregado pelos comandos `start` e `dev`; não o versione. O exemplo em `.env.example` contém apenas valores públicos de configuração.
 
-<a href="https://juniorwmr.github.io/">
- <img style="border-radius: 30;" src="https://juniorwmr.github.io/images/washington-muniz.jpg" width="100px;" alt=""/>
- <br />
+Os dados de pedidos ficam em JSON no disco e sobrevivem a reinícios. O arquivo e a pasta são criados com permissões restritas no Linux e a pasta `data/` é ignorada pelo Git. O conteúdo inclui número de WhatsApp, endereço e itens do pedido; proteja o arquivo e os backups conforme a política de privacidade da empresa. O armazenamento local foi feito para uma única instância do bot.
 
-Done with ❤️ by Washington Muniz 👋🏽 !
+## Fluxo atual
 
-[![Twitter Badge](https://img.shields.io/badge/-@juniorwmr-1ca0f1?style=flat-square&labelColor=1ca0f1&logo=twitter&logoColor=white&link=https://twitter.com/juniorwmr)](https://twitter.com/juniorwmr) [![Linkedin Badge](https://img.shields.io/badge/-Washington-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/juniorwmr/)](https://www.linkedin.com/in/juniorwmr/)
-[![Gmail Badge](https://img.shields.io/badge/-juniorwmr@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:juniorripardo@gmail.com)](mailto:juniorripardo@gmail.com)
+1. `1` mostra o cardápio; `2` mostra as taxas por bairro; `0` ativa o modo de atendimento. O código não integra essa etapa a um atendente humano.
+2. Durante a escolha, `1` a `5` adicionam sabores, `#` avança para o endereço e `*` cancela.
+3. No endereço, `*` cancela. Depois, o cliente informa pagamento e troco.
+4. O atendimento é encerrado com `ENCERRAR` ou após 60 segundos sem mensagem quando o cliente voltar a interagir.
+
+O tempo limite é verificado quando chega uma mensagem. O bot não envia uma mensagem proativa ao completar os 60 segundos.
+
+## Risco do canal WhatsApp
+
+`venom-bot` automatiza o WhatsApp Web por um cliente não oficial. Esse método pode deixar de funcionar e pode levar à restrição do número. A dependência foi mantida em `4.3.7`: na comparação local, a versão publicada `5.3.0` manteve Puppeteer 21 e elevou os achados da auditoria para 6 críticos e 176 altos. Não atualize o cliente sem revisar o grafo e exercitar a conexão com um número de teste.
+
+Foram aplicadas resoluções para dependências indiretas compatíveis e para a correção crítica de `form-data`. Em 11/10/2026, `yarn audit` apontou 0 críticos, 27 altos, 9 moderados e 4 baixos. Os achados altos restantes vêm de `braces` e `extract-zip`, sem versão corrigida publicada no advisory consultado; a cadeia do Venom/Puppeteer precisa ser substituída para eliminar esse risco.
+
+Para uma operação de produção, avalie migrar para a WhatsApp Business Cloud API oficial. A migração depende de decisão de produto, configuração da conta e credenciais próprias; não faz parte deste bot.
+
+## Verificações de código
+
+```bash
+corepack yarn run check
+```
+
+Esse comando executa ESLint e a checagem sintática dos arquivos JavaScript. O projeto ainda não tem suíte de testes automatizados.

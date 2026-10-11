@@ -37,7 +37,7 @@ export const stages = [
 ]
 
 export function getStage({ from }) {
-  if (storage[from]) {
+  if (Object.hasOwn(storage, from)) {
     return storage[from].stage
   }
 

@@ -1,17 +1,22 @@
 import { create } from 'venom-bot'
+import { chmodSync, existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 export class VenomBot {
   #venombot
 
   #session
 
+  #displayName
+
   static getInstance() {
     if (VenomBot.instance === undefined) VenomBot.instance = new VenomBot()
     return VenomBot.instance
   }
 
-  async init({ session, headless, useChrome }) {
+  async init({ session, displayName = session, headless, useChrome }) {
     this.#session = session
+    this.#displayName = displayName
     this.#venombot = await create({
       session,
       headless,
@@ -19,11 +24,21 @@ export class VenomBot {
       multidevice: false,
     })
 
+    const tokenDirectory = resolve(process.cwd(), 'tokens')
+    const sessionDirectory = resolve(tokenDirectory, session)
+
+    if (existsSync(tokenDirectory)) chmodSync(tokenDirectory, 0o700)
+    if (existsSync(sessionDirectory)) chmodSync(sessionDirectory, 0o700)
+
     return this
   }
 
   get getSessionName() {
     return this.#session
+  }
+
+  get getDisplayName() {
+    return this.#displayName
   }
 
   async onMessage(callback) {

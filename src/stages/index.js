@@ -13,3 +13,5 @@ export const STAGES = {
   PEDIDO: '4',
   FALAR_COM_ATENDENTE: '5',
 }
+
+export const INACTIVITY_TIMEOUT_MS = 60_000

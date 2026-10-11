@@ -10,7 +10,7 @@ export const initialStage = {
 
     const message = `
       👋 Olá, como vai?
-      Eu sou Carlos, o *assistente virtual* da ${venombot.getSessionName}.
+      Eu sou Carlos, o *assistente virtual* da ${venombot.getDisplayName}.
       *Posso te ajudar?* 🙋‍♂️
       -----------------------------------
       1️⃣ - FAZER PEDIDO
