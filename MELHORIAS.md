@@ -277,6 +277,8 @@ git diff --check
 - SEC-02 corrige a exposição de sessão do Venom 4.3.7: a biblioteca usa `0777`, então o wrapper passa a guardar os dados abaixo de `.private/0700` e migra a pasta antiga apenas quando o destino ainda não existe. A sessão real não foi aberta.
 - BUG-04 usa um temporário criptograficamente único, criado com `wx` e modo `0600`, evitando reutilizar arquivo residual/link simbólico.
 - ESLint, `node --check`, `audit:critical` (0 críticas) e `git diff --check` passaram. Não foram adicionados/executados testes nem iniciado um cliente WhatsApp.
+- Commit `d1e7221` publicado em `origin/master`; CI `38192975950` passou no runner Ubuntu 24.04 com instalação Yarn, audit crítico e checagens estáticas.
+- O push reportou 12 alertas no painel GitHub (8 altos, 3 moderados, 1 baixo); a auditoria local do Yarn informa 40 achados (0 críticos, 27 altos, 9 moderados, 4 baixos). São contagens distintas e ficam registradas separadamente.
 
 ---
 
