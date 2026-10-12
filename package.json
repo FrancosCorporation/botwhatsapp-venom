@@ -11,8 +11,9 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env src/server.js",
     "dev": "node --env-file-if-exists=.env node_modules/nodemon/bin/nodemon.js src/server.js",
-    "lint": "eslint src",
-    "check": "eslint src && find src -name '*.js' -exec node --check {} \\;"
+    "audit:critical": "node scripts/check-critical-audit.mjs",
+    "lint": "eslint src scripts",
+    "check": "eslint src scripts && find src -name '*.js' -exec node --check {} \\; && node --check scripts/check-critical-audit.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

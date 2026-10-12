@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import {
   closeSync,
   existsSync,
@@ -16,7 +17,6 @@ const defaultStorageFile = fileURLToPath(
   new URL('../data/storage.json', import.meta.url),
 )
 const storageFile = resolve(process.env.BOT_DATA_FILE || defaultStorageFile)
-const temporaryFile = `${storageFile}.${process.pid}.tmp`
 
 export const storage = Object.create(null)
 
@@ -84,10 +84,13 @@ function loadStorage() {
 export function saveStorage() {
   mkdirSync(dirname(storageFile), { recursive: true, mode: 0o700 })
 
+  const temporaryFile = `${storageFile}.${process.pid}.${randomUUID()}.tmp`
   let descriptor
+  let temporaryFileCreated = false
 
   try {
-    descriptor = openSync(temporaryFile, 'w', 0o600)
+    descriptor = openSync(temporaryFile, 'wx', 0o600)
+    temporaryFileCreated = true
     writeFileSync(descriptor, `${JSON.stringify(storage, null, 2)}\n`)
     fsyncSync(descriptor)
     closeSync(descriptor)
@@ -95,7 +98,7 @@ export function saveStorage() {
     renameSync(temporaryFile, storageFile)
   } catch (error) {
     if (descriptor !== undefined) closeSync(descriptor)
-    if (existsSync(temporaryFile)) unlinkSync(temporaryFile)
+    if (temporaryFileCreated && existsSync(temporaryFile)) unlinkSync(temporaryFile)
     throw new Error(`Não foi possível salvar o estado em ${storageFile}.`, {
       cause: error,
     })
