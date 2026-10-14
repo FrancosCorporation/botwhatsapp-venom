@@ -47,6 +47,8 @@
     "venom-bot/cz-conventional-changelog/**/brace-expansion": "1.1.21",
     "venom-bot/puppeteer-extra-plugin-stealth/**/brace-expansion": "1.1.21",
     "venom-bot/commitizen/inquirer/external-editor/tmp": "0.2.7",
-    "venom-bot/cz-conventional-changelog/commitizen/inquirer/external-editor/tmp": "0.2.7"
+    "venom-bot/cz-conventional-changelog/commitizen/inquirer/external-editor/tmp": "0.2.7",
+    "brace-expansion": "1.1.21",
+    "got": "11.8.5"
   }
 }
