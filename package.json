@@ -13,7 +13,8 @@
     "dev": "node --env-file-if-exists=.env node_modules/nodemon/bin/nodemon.js src/server.js",
     "audit:critical": "node scripts/check-critical-audit.mjs",
     "lint": "eslint src scripts",
-    "check": "eslint src scripts && find src -name '*.js' -exec node --check {} \\; && node --check scripts/check-critical-audit.mjs"
+    "check": "eslint src scripts && find src -name '*.js' -exec node --check {} \\; && node --check scripts/check-critical-audit.mjs",
+    "test:extract": "node --test tests/extract-zip-security.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -49,6 +50,7 @@
     "venom-bot/commitizen/inquirer/external-editor/tmp": "0.2.7",
     "venom-bot/cz-conventional-changelog/commitizen/inquirer/external-editor/tmp": "0.2.7",
     "brace-expansion": "1.1.21",
-    "got": "11.8.5"
+    "got": "11.8.5",
+    "extract-zip": "npm:@electron-internal/extract-zip@1.0.8"
   }
 }

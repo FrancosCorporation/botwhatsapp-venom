@@ -21,3 +21,4 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD: 'true'
       - run: corepack yarn run audit:critical
       - run: yarn run check
+      - run: yarn run test:extract

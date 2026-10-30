@@ -48,7 +48,7 @@ O tempo limite é verificado quando chega uma mensagem. O bot não envia uma men
 
 `venom-bot` automatiza o WhatsApp Web por um cliente não oficial. Esse método pode deixar de funcionar e pode levar à restrição do número. A dependência foi mantida em `4.3.7`: na comparação local, a versão publicada `5.3.0` manteve Puppeteer 21 e elevou os achados da auditoria para 6 críticos e 176 altos. Não atualize o cliente sem revisar o grafo e exercitar a conexão com um número de teste.
 
-Foram aplicadas resoluções para dependências indiretas compatíveis e para a correção crítica de `form-data`. Em 11/10/2026, `yarn audit` apontou 0 críticos, 27 altos, 9 moderados e 4 baixos. Os advisories atuais de [`braces`](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) e [`extract-zip`](https://github.com/advisories/GHSA-jmr9-qjv8-65gv) ainda não listam versões corrigidas; a cadeia do Venom/Puppeteer precisa ser substituída para eliminar esse risco.
+Foram aplicadas resoluções para dependências indiretas compatíveis e para a correção crítica de `form-data`. Em 11/10/2026, `yarn audit` apontou 0 críticos, 27 altos, 9 moderados e 4 baixos. Os advisories de [`braces`](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) e [`extract-zip`](https://github.com/advisories/GHSA-jmr9-qjv8-65gv) não listam versões corrigidas. A substituição da extração por uma resolução alternativa está descrita abaixo.
 
 O Venom 4.3.7 aplica permissões `0777` à pasta e ao arquivo de token. O wrapper guarda tudo em `.private/` com modo `0700`, move a pasta legada `tokens/` sem sobrescrever dados e restringe novamente as permissões depois da inicialização. A pasta `.private/` está fora do Git.
 
@@ -61,4 +61,10 @@ corepack yarn run audit:critical
 corepack yarn run check
 ```
 
-`audit:critical` consulta o audit do Yarn Classic e bloqueia a CI somente se encontrar vulnerabilidades críticas; alertas graves, moderados e baixos continuam listados no plano enquanto não houver correções compatíveis para a cadeia do Venom/Puppeteer. `check` executa ESLint e checagem sintática dos arquivos JavaScript. O projeto ainda não tem suíte de testes automatizados.
+`audit:critical` consulta o audit do Yarn Classic e bloqueia a CI somente se encontrar vulnerabilidades críticas; alertas graves, moderados e baixos continuam listados no plano enquanto não houver correções compatíveis para a cadeia do Venom/Puppeteer. `check` executa ESLint e checagem sintática dos arquivos JavaScript. O teste de extração cobre ZIPs normais e tentativas de escape.
+
+### Extração de arquivos
+
+A resolução de `extract-zip` usa `@electron-internal/extract-zip` com Node 22.13 ou superior. O pacote é destinado ao projeto Electron e seu uso externo não é oficialmente suportado; verificações locais cobrem ZIP normal, traversal e escape por symlink. A confirmação de fechamento dos alertas depende da reanálise do GitHub.
+
+Execute `corepack yarn test:extract` para verificar os casos de extração.
